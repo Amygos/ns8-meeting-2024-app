@@ -8,7 +8,15 @@
 import json
 import sys
 import agent
+import os
+from urllib.parse import urlparse
 
-config = {}
+app_url = os.getenv("APP_URL")
+domain = urlparse(app_url).netloc if app_url else None
+
+config = {
+    "domain": domain,
+    "timezone": os.getenv("APP_TIMEZONE")
+}
 
 json.dump(config, fp=sys.stdout)

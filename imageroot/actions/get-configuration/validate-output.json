@@ -3,6 +3,24 @@
     "title": "get-configuration output",
     "$id": "http://schema.nethserver.org/meeting-2024-app/get-configuration-output.json",
     "description": "Get meeting-2024-app configuration",
-    "examples": [],
-    "type": "object"
+    "examples": [
+        {
+            "domain": "example.com",
+            "timezone": "UTC"
+        }
+    ],
+    "type": "object",
+    "properties": {
+        "domain": {
+            "type": "string",
+            "description": "The domain of the application",
+            "examples": ["example.com"]
+        },
+        "timezone": {
+            "type": "string",
+            "description": "The timezone of the application",
+            "examples": ["UTC", "Europe/Rome"]
+        }
+    },
+    "required": ["domain", "timezone"]
 }
