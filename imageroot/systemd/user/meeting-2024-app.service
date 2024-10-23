@@ -13,6 +13,7 @@ Description=meeting-2024-app server
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%S/state/environment
+EnvironmentFile=%S/state/passwords.env
 WorkingDirectory=%S/state
 Restart=always
 ExecStartPre=/bin/rm -f %t/meeting-2024-app.pid %t/meeting-2024-app.ctr-id
@@ -27,11 +28,13 @@ ExecStart=/usr/bin/podman run \
     --env-file=smarthost.env \
     --env APP_TIMEZONE \
     --env APP_URL \
+    --env APP_KEY \
     --env DB_CONNECTION \
     --env DB_HOST \
     --env DB_PORT \
     --env DB_DATABASE \
     --env DB_USERNAME \
+    --env DB_PASSWORD \
     ${MEETING_2024_APP_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/meeting-2024-app.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/meeting-2024-app.ctr-id
