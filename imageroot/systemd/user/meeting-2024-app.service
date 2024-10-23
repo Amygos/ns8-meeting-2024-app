@@ -20,6 +20,7 @@ ExecStartPre=/bin/rm -f %t/meeting-2024-app.pid %t/meeting-2024-app.ctr-id
 ExecStartPre=-runagent discover-smarthost
 ExecStart=/usr/bin/podman run \
     --detach \
+    --network=slirp4netns:allow_host_loopback=true \
     --conmon-pidfile=%t/meeting-2024-app.pid \
     --cidfile=%t/meeting-2024-app.ctr-id \
     --cgroups=no-conmon \
@@ -30,7 +31,7 @@ ExecStart=/usr/bin/podman run \
     --env APP_URL \
     --env APP_KEY \
     --env DB_CONNECTION \
-    --env DB_HOST \
+    --env DB_HOST=10.0.2.2 \
     --env DB_PORT \
     --env DB_DATABASE \
     --env DB_USERNAME \
