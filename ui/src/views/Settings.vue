@@ -23,14 +23,21 @@
       <cv-column>
         <cv-tile light>
           <cv-form @submit.prevent="configureModule">
-            <!-- TODO remove test field and code configuration fields -->
             <cv-text-input
-              :label="$t('settings.test_field')"
-              v-model="testField"
-              :placeholder="$t('settings.test_field')"
+              :label="$t('settings.domain')"
+              v-model="domain"
+              :placeholder="$t('settings.domain')"
               :disabled="loading.getConfiguration || loading.configureModule"
-              :invalid-message="error.testField"
-              ref="testField"
+              :invalid-message="error.domain"
+              ref="domain"
+            ></cv-text-input>
+            <cv-text-input
+              :label="$t('settings.timezone')"
+              v-model="timezone"
+              :placeholder="$t('settings.timezone')"
+              :disabled="loading.getConfiguration || loading.configureModule"
+              :invalid-message="error.timezone"
+              ref="timezone"
             ></cv-text-input>
             <cv-row v-if="error.configureModule">
               <cv-column>
@@ -85,7 +92,8 @@ export default {
         page: "settings",
       },
       urlCheckInterval: null,
-      testField: "", // TODO remove
+      domain: "",
+      timezone: "",
       loading: {
         getConfiguration: false,
         configureModule: false,
@@ -93,7 +101,8 @@ export default {
       error: {
         getConfiguration: "",
         configureModule: "",
-        testField: "", // TODO remove
+        domain: "",
+        timezone: "",
       },
     };
   },
@@ -160,29 +169,24 @@ export default {
       this.loading.getConfiguration = false;
       const config = taskResult.output;
 
-      // TODO set configuration fields
-      // ...
+      this.domain = config.domain || "";
+      this.timezone = config.timezone || "";
 
-      // TODO remove
-      console.log("config", config);
-
-      // TODO focus first configuration field
-      this.focusElement("testField");
+      this.focusElement("domain");
     },
     validateConfigureModule() {
       this.clearErrors(this);
       let isValidationOk = true;
 
-      // TODO remove testField and validate configuration fields
-      if (!this.testField) {
-        // test field cannot be empty
-        this.error.testField = this.$t("common.required");
+      if (!this.domain) {
+        this.error.domain = this.$t("common.required");
 
         if (isValidationOk) {
-          this.focusElement("testField");
+          this.focusElement("domain");
           isValidationOk = false;
         }
       }
+
       return isValidationOk;
     },
     configureModuleValidationFailed(validationErrors) {
@@ -191,7 +195,6 @@ export default {
       for (const validationError of validationErrors) {
         const param = validationError.parameter;
 
-        // set i18n error message
         this.error[param] = this.$t("settings." + validationError.error);
       }
     },
@@ -227,7 +230,8 @@ export default {
         this.createModuleTaskForApp(this.instanceName, {
           action: taskAction,
           data: {
-            // TODO configuration fields
+            domain: this.domain,
+            timezone: this.timezone,
           },
           extra: {
             title: this.$t("settings.configure_instance", {
@@ -255,7 +259,6 @@ export default {
     configureModuleCompleted() {
       this.loading.configureModule = false;
 
-      // reload configuration
       this.getConfiguration();
     },
   },
