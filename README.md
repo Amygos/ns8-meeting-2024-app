@@ -1,65 +1,39 @@
 # ns8-meeting-2024-app
 
-This is a template module for [NethServer 8](https://github.com/NethServer/ns8-core).
-To start a new module from it:
-
-1. Click on [Use this template](https://github.com/NethServer/ns8-meeting-2024-app/generate).
-   Name your repo with `ns8-` prefix (e.g. `ns8-mymodule`). 
-   Do not end your module name with a number, like ~~`ns8-baaad2`~~!
-
-1. Clone the repository, enter the cloned directory and
-   [configure your GIT identity](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup#_your_identity)
-
-1. Rename some references inside the repo:
-   ```
-   modulename=$(basename $(pwd) | sed 's/^ns8-//')
-   git mv imageroot/systemd/user/meeting-2024-app.service imageroot/systemd/user/${modulename}.service
-   git mv tests/meeting-2024-app.robot tests/${modulename}.robot
-   sed -i "s/meeting-2024-app/${modulename}/g" $(find .github/ * -type f)
-   git commit -a -m "Repository initialization"
-   ```
-
-1. Edit this `README.md` file, by replacing this section with your module
-   description
-
-1. Adjust `.github/workflows` to your needs. `clean-registry.yml` might
-   need the proper list of image names to work correctly. Unused workflows
-   can be disabled from the GitHub Actions interface.
-
-1. Commit and push your local changes
+This is a module for [NethServer 8](https://github.com/NethServer/ns8-core).
 
 ## Install
 
 Instantiate the module with:
 
-    add-module ghcr.io/nethserver/meeting-2024-app:latest 1
+    add-module ghcr.io/amygos/meeting-2024-app:latest 1
 
 The output of the command will return the instance name.
 Output example:
 
-    {"module_id": "meeting-2024-app1", "image_name": "meeting-2024-app", "image_url": "ghcr.io/nethserver/meeting-2024-app:latest"}
+    {"module_id": "meeting-2024-app1", "image_name": "meeting-2024-app", "image_url": "ghcr.io/amygos/meeting-2024-app:latest"}
 
 ## Configure
 
 Let's assume that the meeting-2024-app instance is named `meeting-2024-app1`.
 
 Launch `configure-module`, by setting the following parameters:
-- `<MODULE_PARAM1_NAME>`: <MODULE_PARAM1_DESCRIPTION>
-- `<MODULE_PARAM2_NAME>`: <MODULE_PARAM2_DESCRIPTION>
-- ...
+- `domain`: The domain name to configure
+- `timezone`: The timezone to configure
 
 Example:
 
-    api-cli run module/meeting-2024-app1/configure-module --data '{}'
+    api-cli run module/meeting-2024-app1/configure-module --data '{"domain": "example.com", "timezone": "UTC"}'
 
 The above command will:
-- start and configure the meeting-2024-app instance
-- (describe configuration process)
-- ...
+- start and configure the ns8-meeting-2024-app instance
+- Set the APP_URL environment variable
+- Configure Traefik to route the request to the module instance using the domain configured by the user
+- Set the timezone into APP_TIMEZONE environment variable if 'timezone' is present in the request
 
-Send a test HTTP request to the meeting-2024-app backend service:
+Send a test HTTP request to the ns8-meeting-2024-app backend service:
 
-    curl http://127.0.0.1/meeting-2024-app/
+    curl https://<domain>/shopping-list/
 
 ## Smarthost setting discovery
 
@@ -68,17 +42,14 @@ Some configuration settings, like the smarthost setup, are not part of the
 Redis keys.  To ensure the module is always up-to-date with the
 centralized [smarthost
 setup](https://nethserver.github.io/ns8-core/core/smarthost/) every time
-meeting-2024-app starts, the command `bin/discover-smarthost` runs and refreshes
+ns8-meeting-2024-app starts, the command `bin/discover-smarthost` runs and refreshes
 the `state/smarthost.env` file with fresh values from Redis.
 
-Furthermore if smarthost setup is changed when meeting-2024-app is already
+Furthermore if smarthost setup is changed when ns8-meeting-2024-app is already
 running, the event handler `events/smarthost-changed/10reload_services`
 restarts the main module service.
 
-See also the `systemd/user/meeting-2024-app.service` file.
-
-This setting discovery is just an example to understand how the module is
-expected to work: it can be rewritten or discarded completely.
+See also the `systemd/user/ns8-meeting-2024-app.service` file.
 
 ## Uninstall
 
@@ -91,7 +62,7 @@ To uninstall the instance:
 Test the module using the `test-module.sh` script:
 
 
-    ./test-module.sh <NODE_ADDR> ghcr.io/nethserver/meeting-2024-app:latest
+    ./test-module.sh <NODE_ADDR> ghcr.io/amygos/meeting-2024-app:latest
 
 The tests are made using [Robot Framework](https://robotframework.org/)
 
