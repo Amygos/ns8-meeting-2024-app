@@ -16,7 +16,7 @@ Check if meeting-2024-app can be configured
 
 Check if meeting-2024-app works as expected
     ${rc} =    Execute Command    curl -fk -resolve 'app.example.com:443:127.0.0.1' https://app.example.com/shopping-list
-    ...    return_rc=True  return_stdout=False
+    ...    return_rc=True
     Should Be Equal As Integers    ${rc}  0
 
 Check if meeting-2024-app is removed correctly
