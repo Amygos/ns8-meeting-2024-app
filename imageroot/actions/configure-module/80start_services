@@ -9,5 +9,10 @@
 
 touch smarthost.env
 
-systemctl --user enable --now meeting-2024-app.service
-systemctl --user enable --now database.service
+# Enable and restart the services
+
+systemctl --user enable meeting-2024-app.service
+systemctl --user restart meeting-2024-app.service
+
+systemctl --user enable database.service
+systemctl --user restart database.service
