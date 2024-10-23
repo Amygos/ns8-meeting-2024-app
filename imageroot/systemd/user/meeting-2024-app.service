@@ -23,7 +23,7 @@ ExecStart=/usr/bin/podman run \
     --cidfile=%t/meeting-2024-app.ctr-id \
     --cgroups=no-conmon \
     --replace --name=%N \
-    --publish=127.0.0.1:${TCP_PORT}:8080 \
+    --publish=127.0.0.1:${APP_PORT}:80 \
     --env-file=smarthost.env \
     ${MEETING_2024_APP_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/meeting-2024-app.ctr-id -t 10
