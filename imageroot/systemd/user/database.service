@@ -19,6 +19,7 @@ Restart=always
 ExecStartPre=/bin/rm -f %t/database.pid %t/database.ctr-id
 ExecStart=/usr/bin/podman run \
     --detach \
+    --volume=mariadb-dat:/var/lib/mysql:Z \
     --conmon-pidfile=%t/database.pid \
     --cidfile=%t/database.ctr-id \
     --cgroups=no-conmon \
