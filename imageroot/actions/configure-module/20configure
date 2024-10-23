@@ -13,22 +13,28 @@ import os
 
 request = json.load(sys.stdin)
 
-# TODO: do something with the request payload. For example configure a
-# custom route in our web router. Here the path is hardcoded as
-# 'meeting-2024-app'.
+# Set the APP_URL environment variable
+agent.set_env('APP_URL', 'https://' + request['domain'])
 
-# Configure Traefik to route "/meeting-2024-app" path requests to the meeting-2024-app service
+# Configure Traefik to route the request to the module instance using the
+# domain configured by the user
+
 response = agent.tasks.run(
     agent_id=agent.resolve_agent_id('traefik@node'),
     action='set-route',
     data={
         'instance': os.environ['MODULE_ID'],
-        'url':  'http://127.0.0.1:' + os.environ["TCP_PORT"],
-        'http2https': False,
-        'lets_encrypt': False,
-        'path': '/meeting-2024-app',
+        'url':  'http://127.0.0.1:' + os.environ["APP_PORT"],
+        'http2https': True,
+        'lets_encrypt': True,
+        'host': request['domain'],
     },
 )
 
 # Check if traefik configuration has been successfull
 agent.assert_exp(response['exit_code'] == 0)
+
+# check if timezone filed is present in the request
+if 'timezone' in request:
+    # Set the timezone into APP_TIMEZONE environment variable
+    agent.set_env('APP_TIMEZONE', request['timezone'])
