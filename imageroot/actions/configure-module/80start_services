@@ -10,3 +10,4 @@
 touch smarthost.env
 
 systemctl --user enable --now meeting-2024-app.service
+systemctl --user enable --now database.service
