@@ -16,6 +16,10 @@ port_list = os.environ['TCP_PORTS'].split(',')
 agent.set_env('APP_PORT', port_list[0])
 agent.set_env('DB_PORT', port_list[1])
 
+# Application variables
+agent.set_env('APP_TIMEZONE', 'UTC')
+agent.set_env('APP_URL', 'http://localhost')
+
 # MySQL connection parameters
 agent.set_env('DB_CONNECTION', 'mysql')
 agent.set_env('DB_HOST', '127.0.0.1')
