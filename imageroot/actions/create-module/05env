@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import agent
+import os
+
+
+# If the ports are less or equal to 8, the environment variable TCP_PORTS is a
+# comma separated list of ports
+port_list = os.environ['TCP_PORTS'].split(',')
+
+agent.set_env('APP_PORT', port_list[0])
+agent.set_env('DB_PORT', port_list[1])
