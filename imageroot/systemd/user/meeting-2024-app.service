@@ -25,6 +25,13 @@ ExecStart=/usr/bin/podman run \
     --replace --name=%N \
     --publish=127.0.0.1:${APP_PORT}:80 \
     --env-file=smarthost.env \
+    --env APP_TIMEZONE \
+    --env APP_URL \
+    --env DB_CONNECTION \
+    --env DB_HOST \
+    --env DB_PORT \
+    --env DB_DATABASE \
+    --env DB_USERNAME \
     ${MEETING_2024_APP_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/meeting-2024-app.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/meeting-2024-app.ctr-id
